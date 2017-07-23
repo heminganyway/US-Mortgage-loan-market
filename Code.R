@@ -6,9 +6,6 @@ library(shiny)
 
 
 # 1. Data Munging -- data loaded
-```{r}
-# To set your working directory, remove the '#' symbole from the next line, and replace the path inside the quotation mark
-# setwd('/Users/chenheming/Desktop')
 
 hmda_init <- function(){
   # read files
@@ -43,14 +40,10 @@ initiate <- hmda_init()
 
 
 
-```
 
 
 
 # Data Munging -- export function
-```{r}
-# To set your working directory, remove the '#' symbole from the next line, and replace the path inside the quotation mark
-# setwd('/Users/chenheming/Desktop')
 
 # export format such as:
 # hmda_to_json(data = initiate)
@@ -158,12 +151,9 @@ hmda_to_json <- function(data,states, conventional_conforming){
 }
 
 
-```
 
 
-
-# Quality Check (a)
-```{r}
+# Quality Check
 # Statisticaly large loans in its' MSA_MD area, as different MSA_MD area have different housing price and conforming limit
 large_loan_byMSA <- initiate%>%
   group_by(MSA_MD_Description)%>%
@@ -181,11 +171,8 @@ large_loan_byRespondent <- large_loan_byMSA%>%
   arrange(desc(count))
 
 large_loan_byRespondent
-```
 
 
-# Quality check (b) & (c)
-```{r}
 # Additional column for quality assessment: loan_to_income_ratio (Loan_Amount_000/Applicant_Income_000), because this reflects applicant's ability of paying back
 
 initiate$Loan_Amount_000 <- as.numeric(initiate$Loan_Amount_000)
@@ -239,18 +226,13 @@ risky_loan_distribution
 # The table shows that almost 60% of risky loans come from the middle group of loan! These statistics demonstrate that loan amount is not always correlated with risk. For example, jumbo loans are intended for excellent borrowers with excellent credit looking to finance loan amounts greater than the amount allowed by Fannie Mae or Freddie Mac, according to our findings, jumbo loans are not having to be more risker than conforming loans.
 
 
-# According to our findings in question 3, the market size for the jumbo market is the only market that shrinks slowly, and our quality assessment shows that most of the risky loans are coming from the middle group of loans. Therefore, my recommendation for Change Financial is to focus its business on the jumbo market.
+# According to our findings in next part, the market size for the jumbo market is the only market that shrinks slowly, and our quality assessment shows that most of the risky loans are coming from the middle group of loans. Therefore, my recommendation for Change Financial is to focus its business on the jumbo market.
 
 
-```
 
 
-# Craft a visual data narrative
-```{r}
-# (a)
 # Hypothesis: It is risky to enter this home loan market
 
-# (b)
 # overall market size 
 mkt_size <- initiate %>%
   group_by(As_of_Year,State) %>%
@@ -274,12 +256,9 @@ ggplot(exlude_mkt_size,aes(x = As_of_Year, y = sum_of_loan)) +
 # Rank of the market size: VA > MD > DC > WV > DE.
 # The mkt size in all five states is decreasing these years. 
 
-```
 
 
 
-
-```{r}
 # conforming mkt
 conform_mkt_size <- initiate %>%
   filter(Conforming_Status == 'Conforming') %>%
@@ -339,24 +318,13 @@ ggplot(exlude_jumbo_mkt_size,aes(x = As_of_Year, y = sum_of_loan)) +
 
 
 
-# (c) 
 # Summarization of key insights:
 # Rank of the market size: VA > MD > DC > WV > DE. Overall, the demand for the home loan decreased sharply from 2012 to 2014, except for WV, the market size in which only decreased slowly. However, in the jumbo loan market, the trend of decreasing is much more gentle. However, It’s worth noting that jumbo market size is relatively small when compared to both conforming and conventional markets.
 
 
-```
-
 
 # R shiny interactive dashboard
-```{r}
-# This dashboard allows VP to see competitor's trend of market share, assets, and distribution of their business in different loan groups.
-
-# Input: Respondent name, State
-
-# Output: 
-# 1. A table describes respondent’s market share, its assets, and distribution of their business in different loan groups in each state in each year.
-# 2. A histogram represents the trend of its market share in this state these years.
-
+# This dashboard allows us to see competitor's trend of market share, assets, and distribution of their business in different loan groups.
 
 # To be noted: not all respondents have business in all states all years.
 
@@ -409,5 +377,3 @@ server <- function(input,output){
 
 shinyApp(server = server, ui = ui)
 
-
-```
